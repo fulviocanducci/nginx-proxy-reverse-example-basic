@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  host-web-server:
+    image: nginx:1.22.0
+    restart: always
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 80:80
+    networks:
+      - proxy
+    depends_on:
+      - web1
+      - web2
+
+  web1:
+    image: nginx:1.22.0
+    restart: always
+    volumes:
+      - ./index-green.html:/usr/share/nginx/html/index.html
+    networks:
+      - proxy
+
+  web2:
+    image: nginx:1.22.0
+    restart: always    
+    volumes:
+      - ./index-red.html:/usr/share/nginx/html/index.html
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    driver: bridge
